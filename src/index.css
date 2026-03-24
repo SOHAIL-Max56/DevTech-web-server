@@ -1,0 +1,4 @@
+@import "tailwindcss";
+@plugin "daisyui"{
+    theme: garden --default, forest --preferdark, halloween, dracula, synthwave;
+};
