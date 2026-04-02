@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import axios from "axios";
-import { API_BASE_URL } from "../utils/constant";
+import { APP_BASE_URL } from "../utils/constants";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
@@ -14,7 +14,7 @@ const Body = () => {
   const navigator = useNavigate();
   const fetchUser = async () => {
     try {
-      const response = await axios.get(API_BASE_URL + "/profile/view", {
+      const response = await axios.get(APP_BASE_URL + "/profile/view", {
         withCredentials: true,
       });
       dispatch(addUser(response.data));
@@ -30,7 +30,7 @@ const Body = () => {
     if (!userData) {
       fetchUser();
     }
-    },[]);
+  }, []);
   return (
     <div>
       <NavBar />

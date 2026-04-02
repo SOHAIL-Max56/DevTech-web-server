@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../utils/constant";
+import { APP_BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -9,22 +9,25 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("sohail@gmail.com");
   const [password, setPassword] = useState("Sohail@123");
+  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLogin = async () => {1
+  const handleLogin = async () => {
+    1;
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/login`,
+        `${APP_BASE_URL}/login`,
         {
           email,
           password,
         },
         { withCredentials: true },
       );
-      dispatch(addUser(response.data))
+      dispatch(addUser(response.data));
       navigate("/");
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error(error);
+      setErrorMessage(error.message);
     }
   };
   return (
@@ -49,7 +52,7 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
+        <p className="text-red-500">{errorMessage}</p>
         <button className="btn btn-neutral mt-4" onClick={handleLogin}>
           Login
         </button>
