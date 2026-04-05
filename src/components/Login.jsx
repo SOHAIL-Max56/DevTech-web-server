@@ -7,13 +7,12 @@ import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("sohail@gmail.com");
-  const [password, setPassword] = useState("Sohail@123");
+  const [email, setEmail] = useState("leon@gmail.com");
+  const [password, setPassword] = useState("Leon@123");
   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogin = async () => {
-    1;
     try {
       const response = await axios.post(
         `${APP_BASE_URL}/login`,

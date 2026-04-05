@@ -10,7 +10,6 @@ const NavBar = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
-  console.log(user);
   const handleLogout = async () => {
     try {
       const response = await axios.post(
@@ -45,7 +44,7 @@ const NavBar = () => {
               <div className="w-10 rounded-full">
                 <img
                   alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  src={user.photoUrl}
                 />
               </div>
             </div>
@@ -56,11 +55,10 @@ const NavBar = () => {
               <li>
                 <Link to="/profile" className="justify-between">
                   Profile
-                  <span className="badge">New</span>
                 </Link>
               </li>
               <li>
-                <Link to="/settings">Settings</Link>
+                <Link to="/connections">Connections</Link>
               </li>
               <li>
                 <button onClick={handleLogout}>Logout</button>
