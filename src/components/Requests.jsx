@@ -1,42 +1,59 @@
-import axios from "axios";
 import React from "react";
 import { APP_BASE_URL } from "../utils/constants";
-import { addConnections } from "../utils/connectionSlice";
+import axios from "axios";
 import { useDispatch } from "react-redux";
+import { addRequest } from "../utils/requestSlice";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-const Connections = () => {
+import { removeRequest } from "../utils/requestSlice";
+// This component will display incoming connection 
+// requests and allow the user to accept or reject them
+const Requests = () => {
   const dispatch = useDispatch();
-  const connections = useSelector((state) => state.connection);
+  const request = useSelector((state) => state.request);
   const user = useSelector((state) => state.user);
-  const fetchConnections = async () => {
-    // Implement API call to fetch connections here
+
+  const RequestDecision = async (status, _id) => {
     try {
-      const res = await axios.get(APP_BASE_URL + "/user/connections", {
+      // Implement API call to accept/reject request here
+      const res = await axios.post(
+        APP_BASE_URL + `/request/review/${status}/${_id}`,
+        {},
+        { withCredentials: true },
+      );
+      dispatch(removeRequest(_id));
+    } catch (error) {
+      console.error("Failed to make decision on request:", error);
+    }
+  };
+
+  const fetchRequests = async () => {
+    // Implement API call to fetch requests here
+    try {
+      const res = await axios.get(APP_BASE_URL + "/user/request/received", {
         withCredentials: true,
       });
-      dispatch(addConnections(res.data.data));
       console.log(res.data.data);
+      dispatch(addRequest(res.data.data));
     } catch (error) {
-      console.error("Failed to fetch connections:", error);
+      console.error("Failed to fetch requests:", error);
     }
   };
 
   useEffect(() => {
-    fetchConnections();
+    fetchRequests();
   }, []);
 
-  if (!connections) return;
-  if (connections.length === 0) {
-    return <div className="text-center mt-10">No connections found.</div>;
+  if (!request) return;
+  if (request.length === 0) {
+    return <div className="text-center mt-10">No Requests found.</div>;
   }
-
   return (
     <div>
-      <h2 className="text-xl font-semibold text-center">
-        {user.firstname}'s Connections
+      <h2 className="text-xl font-semibold text-center my-5">
+        {user.firstname}'s Requests
       </h2>
-      {connections.map((connection) => {
+      {request.map((req) => {
         const {
           _id,
           firstname,
@@ -46,10 +63,10 @@ const Connections = () => {
           gender,
           About,
           skills,
-        } = connection;
+        } = req.senderId;
         return (
           <div key={_id}>
-            <ul className="list hover:bg-base-200 rounded-lg shadow-md">
+            <ul className="list hover:bg-base-300 justify-between rounded-lg shadow-md">
               <li className="list-row ">
                 <div>
                   <img
@@ -83,6 +100,20 @@ const Connections = () => {
                     )}
                   </div>
                 </div>
+                <div className="">
+                  <div
+                    className="badge badge-primary mx-2 hover:bg-green-500 cursor-pointer"
+                    onClick={() => RequestDecision("accepted", req._id)}
+                  >
+                    Accept
+                  </div>
+                  <div
+                    className="badge badge-secondary mx-2 hover:bg-red-500 cursor-pointer"
+                    onClick={() => RequestDecision("rejected", req._id)}
+                  >
+                    Reject
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -92,4 +123,4 @@ const Connections = () => {
   );
 };
 
-export default Connections;
+export default Requests;
