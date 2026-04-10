@@ -7,11 +7,11 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 const Body = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user);
-  const navigator = useNavigate();
+
   const fetchUser = async () => {
     try {
       const response = await axios.get(APP_BASE_URL + "/profile/view", {
@@ -19,10 +19,8 @@ const Body = () => {
       });
       dispatch(addUser(response.data));
     } catch (error) {
-      if (error.status === 401) {
-        navigator("/login");
-      }
-      console.error(error);
+      // Error handled by ProtectedRoute, no need to navigate here
+      console.error("Failed to fetch user:", error);
     }
   };
 
@@ -31,6 +29,7 @@ const Body = () => {
       fetchUser();
     }
   }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />

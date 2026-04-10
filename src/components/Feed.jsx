@@ -29,7 +29,10 @@ const Feed = () => {
   if (!feed) {
     return (
       <div className="flex justify-center items-center h-64">
-        <span className="loading loading-spinner loading-lg"></span>
+        <div className="text-center">
+          <p className="font-bold text-lg">Login to view your feed</p>
+          
+        </div>
       </div>
     );
   }
@@ -49,7 +52,7 @@ const Feed = () => {
   return (
     feed && (
       <div className="flex gap-4 m-4 justify-center">
-        <UserCard user={feed?.data[0]} />
+        <UserCard user={feed?.data[0]} showActions={true}/>
       </div>
     )
   );

@@ -78,13 +78,18 @@ const EditProfile = ({ user }) => {
               onChange={(e) => setAge(e.target.value)}
             />
             <label className="label">Gender</label>
-            <input
-              type="text"
-              className="input"
-              //
+            <select
+              className="select w-full"
               value={Gender}
               onChange={(e) => setGender(e.target.value)}
-            />
+            >
+              <option value="" disabled>
+                Select Gender
+              </option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
             <label className="label">Photo URL</label>
             <input
               type="text"
@@ -126,8 +131,9 @@ const EditProfile = ({ user }) => {
             gender: Gender,
             About,
             skills: skills?.split(",").map((skill) => skill.trim()),
-            photourl: photoUrl,
+            photoUrl: photoUrl,
           }}
+          showActions={false}
         />
       </div>
       {showToast && (
