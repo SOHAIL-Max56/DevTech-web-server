@@ -3,7 +3,7 @@ import React from "react";
 import { APP_BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeFromFeed } from "../utils/feedSlice";
-import { useState } from "react";
+// import { useState } from "react";
 const UserCard = ({ user, showActions = true }) => {
   // Safety check - return null or loading if no user
   const dispatch = useDispatch();
