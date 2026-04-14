@@ -23,7 +23,6 @@ const Feed = () => {
   useEffect(() => {
     getFeed();
   }, []);
-  console.log(feed);
 
     // Loading state
   if (!feed) {

@@ -33,7 +33,6 @@ const Requests = () => {
       const res = await axios.get(APP_BASE_URL + "/user/request/received", {
         withCredentials: true,
       });
-      console.log(res.data.data);
       dispatch(addRequest(res.data.data));
     } catch (error) {
       console.error("Failed to fetch requests:", error);

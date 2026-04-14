@@ -42,4 +42,21 @@ To deploy the application in AWS, you can follow these steps:
 
       - Frontend : http://98.130.129.15/
       - Backend : http://98.130.129.15/api
-      
+      - nginx config :
+      ```
+      server_name 98.130.129.15;
+      location /api/ {
+        proxy_pass http://localhost:3000/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+      ```
+         - `sudo nano /etc/nginx/sites-available/default` to edit the default Nginx configuration file and add the above server block.
+      - `sudo scp -r dist/* /var/www/html/`
+      - `sudo systemctl restart nginx` to apply the new Nginx configuration.
