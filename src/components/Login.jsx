@@ -50,10 +50,11 @@ const Login = () => {
       dispatch(addUser(response.data));
       navigate("/");
     } catch (error) {
-      console.error(error);
+      console.error("Error message : " , error);
       setErrorMessage(error.message);
     }
   };
+  
   return (
     <div className="flex justify-center my-6">
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">

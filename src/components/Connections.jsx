@@ -5,10 +5,14 @@ import { addConnections } from "../utils/connectionSlice";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const Connections = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const connections = useSelector((state) => state.connection);
+
   const user = useSelector((state) => state.user);
+
   const fetchConnections = async () => {
     // Implement API call to fetch connections here
     try {
@@ -24,6 +28,13 @@ const Connections = () => {
   useEffect(() => {
     fetchConnections();
   }, []);
+
+  const handleConnectionClick = (connection) => {
+    console.log("Connection object:", connection);
+    navigate(`/chat/${connection._id}`, {
+      state: { targetUser: connection }, // Pass full user object
+    });
+  };
 
   if (!connections) return;
   if (connections.length === 0) {
@@ -43,33 +54,38 @@ const Connections = () => {
           photoUrl,
           age,
           gender,
-          About,
-          skills,
+          // About,
+          // skills,
         } = connection;
         return (
           <div key={_id}>
             <ul className="list hover:bg-base-200 rounded-lg shadow-md">
-              <li className="list-row ">
-                <div>
-                  <img
-                    className="w-20 h-20 rounded-full object-cover"
-                    src={
-                      photoUrl?.trim() ||
-                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                    }
-                    alt={`${firstname} ${lastname}`}
-                    onError={(e) => {
-                      e.target.src =
-                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
-                    }}
-                  />
-                </div>
-                <div>
+              <li className="list-row">
+                <div
+                  className="flex gap-4 cursor-pointer"
+                  onClick={() => handleConnectionClick(connection)}
+                >
                   <div>
-                    {firstname} {lastname}
+                    <img
+                      className="w-20 h-20 rounded-full object-cover"
+                      src={
+                        photoUrl?.trim() ||
+                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                      }
+                      alt={`${firstname} ${lastname}`}
+                      onError={(e) => {
+                        e.target.src =
+                          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+                      }}
+                    />
                   </div>
-                  {age && gender && <p>{age + ", " + gender}</p>}
-                  <div className="text-xs uppercase font-semibold opacity-60">
+                  <div>
+                    <div className="font-semibold text-lg">
+                      {firstname} {lastname}
+                    </div>
+                    {age && gender && <p>{age + ", " + gender}</p>}
+                  </div>
+                  {/* <div className="text-xs uppercase font-semibold opacity-60">
                     {About && <span>{About}</span>}
                     {About && skills?.length > 0 && (
                       <span>
@@ -80,7 +96,7 @@ const Connections = () => {
                     {skills?.length > 0 && (
                       <span>Skills: {skills.join(", ")}</span>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </li>
             </ul>

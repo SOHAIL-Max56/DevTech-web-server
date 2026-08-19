@@ -9,6 +9,7 @@ import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import ProtectedRoute from "./components/ProtectedRoute"; // Import the new component
 import { Navigate } from "react-router-dom";
+import Chat from "./components/Chat";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/requests"
               element={
@@ -52,6 +54,11 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/chat/:targetUserId" element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            } />
           </Route>
 
           {/* Catch all - redirect to login */}
