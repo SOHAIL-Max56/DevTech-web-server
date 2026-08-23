@@ -131,7 +131,8 @@ const Login = () => {
                   </label>
                   <input
                     type="text"
-                    className="input input-bordered focus:input-primary transition-all"
+                    className="input input-bordered 
+                    focus:input-primary transition-all w-full"
                     placeholder="John"
                     value={firstname}
                     onChange={(e) => setFirstname(e.target.value)}
@@ -150,7 +151,8 @@ const Login = () => {
                   </label>
                   <input
                     type="text"
-                    className="input input-bordered focus:input-primary transition-all"
+                    className="input input-bordered focus:input-primary
+                     transition-all w-full"
                     placeholder="Doe"
                     value={lastname}
                     onChange={(e) => setLastname(e.target.value)}
