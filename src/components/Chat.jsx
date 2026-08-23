@@ -17,6 +17,7 @@ const Chat = () => {
   const [targetUser, setTargetUser] = useState(
     location.state?.targetUser || null,
   );
+  const [socket, setSocket] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const messagesEndRef = useRef(null);
@@ -25,8 +26,11 @@ const Chat = () => {
   const emojis = ["😀", "😂", "❤️", "👍", "🔥", "😎", "🎉", "🤔", "👏", "😊"];
 
   useEffect(() => {
-    if (!targetUser && targetUserId) {
-      const fetchUser = async () => {
+    if (!targetUserId) return;
+
+    // Fetch target user info
+    const fetchTargetUser = async () => {
+      if (!targetUser) {
         try {
           const res = await axios.get(`${APP_BASE_URL}/user/${targetUserId}`, {
             withCredentials: true,
@@ -35,23 +39,39 @@ const Chat = () => {
         } catch (error) {
           console.error("Failed to fetch user:", error);
         }
-      };
-      fetchUser();
-    }
-  }, [targetUser, targetUserId]);
+      }
+    };
 
-  // ✅ FIX 1: Use state for socket so we can use it in handleSend
-  const [socket, setSocket] = useState(null);
+    // Fetch chat history
+    const fetchChatHistory = async () => {
+      try {
+        const res = await axios.get(`${APP_BASE_URL}/chat/${targetUserId}`, {
+          withCredentials: true,
+        });
+        if (res.data.success) {
+          setMessages(
+            res.data.data.messages.map((msg) => ({
+              _id: msg._id,
+              senderId: msg.senderId?._id || msg.senderId,
+              firstName: msg.senderId?.firstname || "Unknown",
+              text: msg.text,
+              timestamp: msg.timestamp,
+            })),
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch chat history:", error);
+      }
+    };
 
-  useEffect(() => {
-    if (!userId || !targetUserId) return;
+    fetchTargetUser();
+    fetchChatHistory();
 
+    // Socket connection
     const newSocket = createSocketConnection();
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
-      console.log("Socket connected");
-      // ✅ FIX 2: lowercase 'firstName', not 'FirstName'
       newSocket.emit("JoinChat", {
         firstName: currentUser.firstname,
         userId,
@@ -60,24 +80,26 @@ const Chat = () => {
     });
 
     newSocket.on("messageReceived", (data) => {
-      console.log("✅ Message received:", data); // Should log when message arrives
-      setMessages((prev) => [
-        ...prev,
-        {
-          _id: Date.now().toString(),
-          senderId: data.senderId,
-          firstName: data.firstName,
-          text: data.text,
-          timestamp: new Date(),
-        },
-      ]);
+      setMessages((prev) => {
+        // Prevent duplicates
+        if (prev.some((msg) => msg._id === data._id)) return prev;
+        return [
+          ...prev,
+          {
+            _id: data._id || Date.now().toString(),
+            senderId: data.senderId,
+            firstName: data.firstName,
+            text: data.text,
+            timestamp: data.timestamp || new Date(),
+          },
+        ];
+      });
     });
 
     return () => {
       newSocket.disconnect();
     };
-  }, [userId, targetUserId, currentUser?.firstname]);
-
+  }, [targetUserId, userId, currentUser?.firstname]);
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
