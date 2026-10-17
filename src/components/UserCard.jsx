@@ -1,6 +1,5 @@
 import axios from "axios";
 import React from "react";
-import { APP_BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeFromFeed } from "../utils/feedSlice";
 import {
@@ -22,7 +21,7 @@ const UserCard = ({ user, showActions = true }) => {
   const handleRequest = async (status, receiverId) => {
     try {
       const res = await axios.post(
-        APP_BASE_URL + `/profile/${status}/${receiverId}`,
+        import.meta.env.VITE_APP_BASE_URL + `/profile/${status}/${receiverId}`,
         {},
         { withCredentials: true }
       );

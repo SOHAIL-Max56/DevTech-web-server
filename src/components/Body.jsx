@@ -1,7 +1,6 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import axios from "axios";
-import { APP_BASE_URL } from "../utils/constants";
 import { useSelector, useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useEffect, useState } from "react";
@@ -15,7 +14,7 @@ const Body = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(APP_BASE_URL + "/profile/view", {
+      const response = await axios.get(import.meta.env.VITE_APP_BASE_URL + "/profile/view", {
         withCredentials: true,
       });
       dispatch(addUser(response.data));

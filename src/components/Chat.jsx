@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { APP_BASE_URL } from "../utils/constants";
 import { createSocketConnection } from "../utils/socket";
 import { IoMdSend } from "react-icons/io";
 import { CiCirclePlus } from "react-icons/ci";
@@ -32,7 +31,7 @@ const Chat = () => {
     const fetchTargetUser = async () => {
       if (!targetUser) {
         try {
-          const res = await axios.get(`${APP_BASE_URL}/user/${targetUserId}`, {
+          const res = await axios.get(`${import.meta.env.VITE_APP_BASE_URL}/user/${targetUserId}`, {
             withCredentials: true,
           });
           setTargetUser(res.data?.data);
@@ -45,7 +44,7 @@ const Chat = () => {
     // Fetch chat history
     const fetchChatHistory = async () => {
       try {
-        const res = await axios.get(`${APP_BASE_URL}/chat/${targetUserId}`, {
+        const res = await axios.get(`${import.meta.env.VITE_APP_BASE_URL}/chat/${targetUserId}`, {
           withCredentials: true,
         });
         if (res.data.success) {

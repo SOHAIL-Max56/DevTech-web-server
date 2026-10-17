@@ -14,7 +14,6 @@ import {
 } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 
-import { APP_BASE_URL } from "../utils/constants";
 import { addRequest, removeRequest } from "../utils/requestSlice";
 
 const DEFAULT_PROFILE =
@@ -30,7 +29,7 @@ const Requests = () => {
     try {
       setLoadingId(requestId);
       await axios.post(
-        `${APP_BASE_URL}/request/review/${status}/${requestId}`,
+        `${import.meta.env.VITE_APP_BASE_URL}/request/review/${status}/${requestId}`,
         {},
         { withCredentials: true }
       );
@@ -45,7 +44,7 @@ const Requests = () => {
   const fetchRequests = async () => {
     try {
       const res = await axios.get(
-        `${APP_BASE_URL}/user/request/received`,
+        `${import.meta.env.VITE_APP_BASE_URL}/user/request/received`,
         { withCredentials: true }
       );
       dispatch(addRequest(res.data.data));

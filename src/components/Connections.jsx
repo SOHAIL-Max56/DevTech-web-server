@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
-import { APP_BASE_URL } from "../utils/constants";
 import { addConnections } from "../utils/connectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +29,7 @@ const Connections = () => {
     try {
       setLoading(true);
 
-      const res = await axios.get(APP_BASE_URL + "/user/connections", {
+      const res = await axios.get(import.meta.env.VITE_APP_BASE_URL + "/user/connections", {
         withCredentials: true,
       });
 
